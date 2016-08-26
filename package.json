@@ -1,0 +1,20 @@
+{
+  "name": "deviceSignoutProject",
+  "description": "ExpressJs + Passport.js + MySQL Authentication",
+  "version": "1.0.0",
+  "author": "",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt-nodejs": "*",
+    "body-parser": "*",
+    "bookshelf": "0.5",
+    "cookie-parser": "*",
+    "ejs": "*",
+    "express": "4.x",
+    "express-session": "*",
+    "knex": "^0.11.9",
+    "mysql": "*",
+    "passport": "*",
+    "passport-local": "*"
+  }
+}

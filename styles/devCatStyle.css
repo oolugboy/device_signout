@@ -1,0 +1,71 @@
+
+div.inner-cover
+{
+	width: 1100px;
+	height: 200px;
+	position : fixed;       
+	top : 0;
+	bottom : 0;
+	left : 0;
+	right : 0;   
+	margin: auto;    
+}
+
+button.logOutButton
+{
+	position: fixed;
+	top:300px;
+	right:1390px;
+	background-color: black; /* Green */
+	border: none;
+
+	/*  background: none; */
+	color: white;
+	padding: 15px 32px; 
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 18px;
+	border-radius: 12px;
+}
+button.checkOutButton
+{
+	position: fixed;
+	bottom: 340px;
+	left: 750px;
+	background-color: black; /* Green */
+	border: none;
+	color: white;
+	padding: 7px 15px; 
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 18px;
+	border-radius: 12px;
+}
+
+p.welcomeMessage
+{
+	position: fixed;
+	top: 200px;
+	right: 1270px;
+	font-size: 2.0em;
+}
+p.swipeInstruction
+{
+	position: fixed;
+	bottom: 380px;
+	left: 410px;
+	font-size: 1.5em;
+}
+p.checkOutMess
+{
+	position: fixed;
+	bottom: 300px;
+	left: 410px;
+	font-size: 1.3em;
+	font-weight: bold;
+}
+.hide-block{
+    display: none;
+}

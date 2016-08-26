@@ -1,0 +1,51 @@
+#dialogoverlay{
+	display: none;
+	opacity: .8;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background: white;
+	width: 100%;
+	z-index: 10;
+}
+#dialogbox{
+	display: none;
+	position: fixed;
+	background: white;
+	border-radius:7px; 
+	width:550px;	
+	z-index: 10;
+}
+#dialogbox > div
+{ 
+	background:	#F5F5F5; 
+	margin:8px; 
+	border-radius:12px;
+}
+#dialogbox > div > #dialogboxhead{ 
+	background: #F5F5F5; 
+	font-size:19px;
+	padding:10px; 
+	color:black;
+	border-radius: 12px; 
+	/** height **/
+}
+#dialogbox > div > #dialogboxbody{ 
+	background: #F5F5F5; 
+	padding:20px; 
+	color:white;
+	height:0px; 
+}
+#dialogbox > div > #dialogboxfoot{ background: #F5F5F5; padding:10px; text-align:right; }
+button.dialOption{
+	
+	background-color: black; /* Green */
+	border: none;
+	color: #F5F5F5;
+	padding: 7px 15px; 
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;	
+	border-radius: 12px;	
+	font-weight: bold;
+}

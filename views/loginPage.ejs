@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<!-- To ensure proper renderding and zooming -->
+<meta name="viewport" content="width=device-width, initial-scale=1">   
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<!-- <link href="../styles/loginStyle.css" rel="stylesheet"> -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> 
+<!-- Custom CSS styling -->
+<link rel="stylesheet" href="../styles/loginStyle.css">
+<link rel="stylesheet" href="../styles/dialog.css">
+
+<head>
+<title><%= title %></title>
+</head>
+<body>
+<div class="container">
+    <form class="form-signin" method="post" action="/Login">
+
+        <% if(typeof(errorMessage) !== 'undefined') {%>
+        <p class="errMessage"><%= errorMessage %></p>         
+        <% } %>
+
+        <h2 class="form-Login-heading">Please Log in</h2>
+        <label for="Username" class="sr-only">Username</label>
+        <input type="text" id="username" class="form-control" placeholder="Username" name="username" required="true" style="height:50px;width:300px"/>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Password" name="password" required="true"  style="height:50px;width:300px"/>
+        <button class="loginButton" type="submit" style="height:50px;width:300px">Log in</button>
+    </form>
+    <form class="form-signin" method="get" action="/Register">    
+        <br>      
+        <button class="registerButton" type="submit" name="regButton" style="height:50px;width:300px"> Register </button>
+    </form>
+    <form action="/Login" id="returnForm" method="post">
+        <p class="retInstr"> Please scan your device to enter it's ID if you want to return it </p>
+        <input type="text" id="returnId"class="form-control" style="height:35px;width:300px;left:410px; bottom:340px;position:fixed;" id="returnIdInput" autofocus="true" name="returnId" required="true">
+        <button type="button" onclick='getDeviceName("returnId", "returnForm", "false")' class="returnButton"> Return Device </button>
+
+        <% if(typeof(returnMessage) !== 'undefined') {%>
+        <p class= "retMessage"><%= returnMessage %></p>        
+        <% } %>
+    </form> 
+</div> <!-- /container -->
+<div id="dialogoverlay"></div>
+<div id="dialogbox">
+    <div>
+        <div id="dialogboxhead"></div>
+        <!--   <div id="dialogboxbody"></div> -->
+        <div id="dialogboxfoot"></div>
+    </div>
+</div>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/views/dialog.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html> 

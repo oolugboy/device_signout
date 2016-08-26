@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<!-- To ensure proper renderding and zooming -->
+<meta name="viewport" content="width=device-width, initial-scale=1">      
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="../styles/registerStyle.css">
+<head>
+<title><%= title %></title>
+</head>  
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">    
+            <form class="form-horizontal" action="/Register" method="POST">
+                <% if(typeof(errorMessage) !== 'undefined') {%>
+                <p> <%= errorMessage %></p>
+                <% } %>
+                <fieldset>
+                    <div id="legend">
+                        <legend class="">Register</legend>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="username">Username</label>
+                        <div class="controls">
+                            <input type="text" id="username" name="username" placeholder="" class="form-control input-lg" required="true">
+                            <p class="help-block">Please provide your username</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">FirstName</label>
+                        <div class="controls">
+                            <input type="text" id="firstname" name="firstname" placeholder="" class="form-control input-lg" required="true">
+                            <p class="help-block">Please provide your firstname</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">LastName</label>
+                        <div class="controls">
+                            <input type="text" id="lastname" name="lastname" placeholder="" class="form-control input-lg" required="true">
+                            <p class="help-block">Please provide your lastname</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="password">Password</label>
+                        <div class="controls">
+                            <input type="password" id="password" name="password" placeholder="" class="form-control input-lg" required="true">
+                            <p class="help-block">Please provide your password</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="password_confirm">Password (Confirm)</label>
+                        <div class="controls">
+                            <input type="password" id="password_confirm" name="password_confirm" placeholder="" class="form-control input-lg" required="true">
+                            <p class="help-block">Please confirm password</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <!-- Button -->
+                        <div class="controls">
+                            <button class="registerButton" type="submit">Register</button>                
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+            <form class="backToLogin" action="/Login" method="GET">
+                <button class="backToLogin" type="submit"> Login </button>
+            </form>            
+        </div> 
+    </div>
+</div>

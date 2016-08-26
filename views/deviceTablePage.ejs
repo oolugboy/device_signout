@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<!-- Custom CSS -->
+<link rel="stylesheet" href="../styles/logOutButton.css">
+<link href="../styles/simpleSideBar.css" rel="stylesheet">
+<link href="../styles/deviceTable.css" rel="stylesheet">
+
+
+</head>
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+            <p class="user">
+            User : <%= user %>
+            </p>
+            </li>
+            <li>
+            <a href="/">Home</a>
+            </li>
+            <li>
+            <a href= <%= link %> >Less Device Details</a>
+            </li>
+            <li>
+            <a href="/Logout">Log out</a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <div class="container">
+        <h2> <%= title %></h2> 
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> DeviceName </th>
+                        <th> Operating System </th>
+                        <th> Visual Description </th>
+                        <th> Resolution </th>
+                        <th> Aspect Ratio </th>
+                        <th> Additional Details </th>
+                        <th> Available </th>
+                        <th> Currently Used by </th>
+                    </tr>      
+                </thead>
+
+                <tbody>     
+                <% rows.forEach(function(entry){ %>     
+                <tr> 
+                    <td> <%= entry.deviceName %> </td>
+                    <td> <%= entry.operatingSystem %> </td>
+                    <td> <%= entry.visualDescription %> </td>
+                    <td> <%= entry.resolution %> </td>
+                    <td> <%= entry.aspectRatio %> </td>
+                    <td> <%= entry.additionalDetails %> </td>
+                    <td> <%= entry.available %> </td>
+                    <td> <%= entry.currInUseBy %> </td>
+                </tr>             
+                <% }) %>
+                </tbody>
+            </table>  
+        </div>
+    </div>
+    </body>
+    </html>

@@ -1,4 +1,4 @@
-
+/** TODO delete this after figuring out the transition **/
 div.inner-cover
 {
 	width: 1100px;
@@ -10,12 +10,17 @@ div.inner-cover
 	right : 0;   
 	margin: auto;    
 }
-
+div.logOutForm
+{
+    position:fixed;
+    top: 500px;
+    right: 800px;
+}
 button.logOutButton
 {
-	position: fixed;
-	top:300px;
-	right:1390px;
+	position: relative;
+	top: 0px;
+	right: 600px;
 	background-color: black; /* Green */
 	border: none;
 
@@ -30,8 +35,8 @@ button.logOutButton
 }
 button.checkOutButton
 {
-	position: fixed;
-	bottom: 340px;
+	position: relative;
+	bottom: 410px;
 	left: 750px;
 	background-color: black; /* Green */
 	border: none;
@@ -47,25 +52,41 @@ button.checkOutButton
 p.welcomeMessage
 {
 	position: fixed;
-	top: 200px;
+	top: 100px;
 	right: 1270px;
 	font-size: 2.0em;
 }
 p.swipeInstruction
 {
-	position: fixed;
-	bottom: 380px;
+	position: relative;
+        bottom: 380px;
 	left: 410px;
 	font-size: 1.5em;
 }
-p.checkOutMess
+input.form-control
 {
-	position: fixed;
-	bottom: 300px;
-	left: 410px;
-	font-size: 1.3em;
-	font-weight: bold;
+    height:35px;
+    width:300px; 
+    left:410px; 
+    bottom:370px;
+    position:relative;
+}
+div.checkOut
+{
+    position: fixed;
+    top: 600px;
+    right: 1270px;
+}
+div.return
+{
+    position: fixed;
+    top: 750px;
+    right: 1308px;
 }
 .hide-block{
     display: none;
+}
+p.user
+{
+    color: white;
 }

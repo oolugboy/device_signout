@@ -306,3 +306,11 @@ button.backToLogin
   width: 276px;
   height: 50px;
 }
+p.errMessage
+{
+  position: fixed;
+  top: 150px;
+  right: 500px;
+  font-size: 1.3em;
+  font-weight: bold;
+}

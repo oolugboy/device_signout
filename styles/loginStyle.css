@@ -90,9 +90,9 @@ p.retMessage
 }
 p.errMessage
 {
-  position: fixed;
-  top: 150px;
-  right: 500px;
+  position: relative;
+  top: 0px;
+  right: 0px;
   font-size: 1.3em;
   font-weight: bold;
 }

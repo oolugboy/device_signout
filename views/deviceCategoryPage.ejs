@@ -11,10 +11,8 @@
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<!-- Custom stylings -->
-<link rel="stylesheet" type="text/css" href="../styles/devCatStyle.css">
-<link rel="stylesheet" href="../styles/logOutButton.css">
-<link rel="stylesheet" href="../styles/popupS.min.css">
+<!-- Custom stylings --> 
+<link rel="stylesheet" type="text/css" href="../styles/devCatStyle.css"> 
 <link rel="stylesheet" href="../styles/dialog.css">
 <link href="../styles/simpleSideBar.css" rel="stylesheet">
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -25,41 +23,70 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
       <![endif]-->
-<p class="welcomeMessage">
-Welcome <strong><%= user.username %> </strong>
-</p>
-<div class="logOutForm">
-    <form method="get" action="/logOut">
-        <button class="logOutButton" type="submit" name="logOut"> Logout </button>
-    </form>
-</div>
 </head>
 
 <body>
+<div id="wrapper">
+    <p class="welcomeMessage">
+        Welcome <strong><%= user.username %> </strong>
+    </p>
+    <div class="logOutForm">
+        <form method="get" action="/logout">
+            <button class="logOutButton" type="submit" name="logOut"> Logout </button>
+        </form>
+    </div>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+            <p class="user"> Search Options</p>
+            </li>
+            <li>
+            <a href="/ipadsPage">IPads</a>
+            </li>
+            <li>
+            <a href='/iPodsOrIPhonesPage'> IPods/IPhones</a>
+            </li>
+            <li>
+            <a href='/androidPhonesPage'> Android Phones</a>
+            </li>
+            <li>
+            <a href='/androidTabletsPage'> Android Tablets </a>
+            </li>
+            <li>
+            <a href='/mozillaOrAmazonPage'> Mozilla/Amazon Phones</a>
+            </li>
+            <li>
+            <a href='/amazonTabletsPage'> Amazon Tablets</a>
+            </li>
+            <li>
+            <a href='/windowsPage'> Windows </a>
+            </li>
+        </ul>
+    </div>
 
-<div class="inner-cover">
-    <h1 class="cover-heading">Search for available devices </h1>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/ipadsPage';"> Ipads </button>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/iPodsOrIPhonesPage';"> Ipods/Iphones </button>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/androidPhonesPage';"> Android Phones </button>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/androidTabletsPage';"> Android Tablets </button>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/mozillaOrAmazonPage';"> Mozilla/Amazon Phones </button>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/amazonTabletsPage';"> Amazon Tablets </button>
-    <button type="button" class="btn btn-lg btn-default-outline" onclick="location.href = '/windowsPage';"> Windows </button>
-</div>
-<div class="checkOut">
-    <form id="checkOutForm" action="/" method="POST">
-        <p class="swipeInstruction"> Please scan your device to enter it's ID for check out </p>
-        <input type="text" class="form-control" id="checkOutIdInput" name="checkOutId" autofocus="true" style="height:35px;width:300px; left:410px; bottom:340px;position:fixed;" required="true">
-        <button class="checkOutButton" onclick='getDeviceName("checkOutIdInput", "checkOutForm","true")' type="button"> Checkout Device </button>
-    </form>
-</div>
-<div id="dialogoverlay"></div>
-<div id="dialogbox">
-    <div>
-        <div id="dialogboxhead"></div>
-        <!--   <div id="dialogboxbody"></div> -->
-        <div id="dialogboxfoot"></div>
+
+    <div class="checkOut">
+        <form id="checkOutForm" action="/" method="POST">
+            <p class="swipeInstruction"> Please scan your device to enter it's ID for check out </p>
+            <input type="text" class="form-control" id="checkOutIdInput" name="checkOutId" autofocus="true" required="true">
+            <button class="checkOutButton" onclick='getDeviceName("checkOutIdInput", "checkOutForm","true")' type="button"> Checkout Device </button>
+        </form>
+    </div>
+    <div class="return">
+        <form id="returnForm" action="/" method="POST">
+            <p class="swipeInstruction"> Please scan your device to enter it's ID for return </p>
+            <input type="text" class="form-control" id="returnIdInput" name="returnId" autofocus="true" required="true">
+            <button class="checkOutButton" onclick='getDeviceName("returnIdInput","returnForm","false")' type="button"> Return Device </button>
+        </form>
+    </div>
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+        <div>
+            <div id="dialogboxhead"></div>
+            <!--   <div id="dialogboxbody"></div> -->
+            <div id="dialogboxfoot"></div>
+        </div>
     </div>
 </div>
 

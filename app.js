@@ -54,11 +54,12 @@ app.set('view engine', 'ejs');
 
 /** The application middle-wares **/
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
 	secret: 'laptop',
 	resave: false,
-	saveUninitialized: false 
+	saveUninitialized: false,
+        cookie: { maxAge: 6000000 }
 	}));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -86,7 +87,7 @@ app.post('/Register', route.registerPost);
 
 // logout
 // GET
-app.get('/Logout', route.logOut);
+app.get('/logout', route.logOut);
 
 /** The device page routes **/
 app.get('/iPadsPage', route.iPadsVar);

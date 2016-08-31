@@ -97,7 +97,7 @@ function CustomConfirm() {
         }
         else if(op == 'returnAlert')
         {
-            document.getElementById('dialogboxhead').innerHTML = " You have just retunred the " + deviceName + " !";
+            document.getElementById('dialogboxhead').innerHTML = " You have just returned the " + deviceName + " !";
             document.getElementById('dialogboxfoot').innerHTML = '<button class="dialOption" onclick="confirm.okay()">Okay</button>';                
         }
     }

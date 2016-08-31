@@ -201,7 +201,7 @@ var registerPost = function(req, res, next) {
     return usernamePromise.then(function(model) {
         if(model) { //If the user name already exists 
             console.log(" Existent model " + model + " " + model.firstname);
-            res.render('registerPage', {title: 'Register', errorMessage: 'username already exists'});
+            res.render('registerPage', {title: 'Register', errorMessage: 'Error: Username already exists!'});
         } else {
             //****************************************************//
             // MORE VALIDATION GOES HERE(E.G. PASSWORD VALIDATION)
@@ -216,7 +216,7 @@ var registerPost = function(req, res, next) {
 
             if(user.password != user.password_confirm)
             {
-                res.render('registerPage',{title: 'Register', errorMessage: 'Passwords do not match'});               
+                res.render('registerPage',{title: 'Register', errorMessage: 'Error: Passwords do not match!'});               
             }
             else
             {
@@ -240,6 +240,7 @@ var registerPost = function(req, res, next) {
 };
 // Logout
 var logOut = function(req, res, next) {
+    console.log(" The logout button was pressed ");
     if(!req.isAuthenticated()) {
         notFound404(req, res, next);
     } else {

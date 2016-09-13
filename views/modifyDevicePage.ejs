@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<!-- Custom stylings --> 
+<link rel="stylesheet" href="../styles/dialog.css">
+<link rel="stylesheet" href="../styles/modifyDeviceStyle.css">
+<script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+            <p class="user"> Admin <%= user.username %></p>
+            </li>
+            <li>
+            <a href="/">Home</a>
+            </li>
+            <li>
+            <a href="/admin"> Admin Home </a>
+            </li>
+            <li>
+            <a href='/logout'> Logout</a>
+            </li>
+        </ul>
+    </div>
+    <div class="deviceIdInstruction">        
+        <h4 class="devIdInstr"> Please enter the name of the device that you want to modify * </h4>
+        <input type="text" class="form-control tt-query" name="deviceName" placeholder="Device Name" id="deviceNameInput" autofocus="true" required="true">
+        <button type="button" onclick="loadDetails('deviceNameInput')" class="submitButton"> Submit </button>  
+    </div>
+    <div class="container">
+        <h2> Old device details </h2> 
+        <div class="table-responsive">
+            <table class="table" id="detailsTable">
+                <thead>
+                    <tr>
+                        <th> DeviceName </th>
+                        <th> Operating System </th>
+                        <th> Visual Description </th>
+                        <th> Resolution </th>
+                        <th> Aspect Ratio </th>
+                        <th> Additional Details </th>
+                    </tr>      
+                </thead>
+
+                <tbody>     
+                <tr> 
+                    <td id = "t_deviceName" > <%= deviceName %> </td>
+                    <td id = "t_operatingSystem"i > <%= operatingSystem %> </td>
+                    <td id = "t_visualDescription" > <%= visualDescription %> </td>
+                    <td id = "t_resolution" > <%= resolution %> </td>
+                    <td id = "t_aspectRatio" > <%= aspectRatio %> </td>
+                    <td id = "t_additionalDetails" > <%= additionalDetails %> </td>
+                </tr>             
+                </tbody>
+            </table>  
+        </div>
+    </div>
+    <!-- Now for the form -->
+    <div class="container2">
+        <div class="headInstr">
+            <h4> Please enter the new value of any of the device details you want to change </h4>
+        </div>
+        <form id="adminForm">
+            <div class="form-group">
+                <label id="deviceNameLabel" class="form-label" for="Name"> Device Name </label>
+                <input type="text" class="form-control" name="deviceName" id="deviceName" required="false" placeholder="Device Name">
+            </div>
+            <div class="form-group">
+                <label for="OS">Operating System</label>
+                <input type="text" class="form-control" name="os" id="operatingSystem" required="false" placeholder="Operating System">
+            </div>  
+            <div class="form-group">
+                <label for="visualDescription">Visual Description</label>
+                <input type="text" class="form-control" id='visualDescription' name="visualDescription" required='false' placeholder="Visual Description">
+            </div>  
+            <div class="form-group">
+                <label for="resolution">Resolution</label>
+                <input type="text" class="form-control" id='resolution' name="resolution" required='false' placeholder="Resolution">
+            </div>  
+            <div class="form-group">
+                <label for="aspectRatio">Aspect Ratio</label>
+                <input type="text" class="form-control" id='aspectRatio' name="aspectRatio" required='false' placeholder="Aspect Ratio">
+            </div>  
+            <div class="form-group">
+                <label for="additionalDetails">Additional Details</label>
+                <textarea type="text" class="form-control" id="additionalDetails" required='false' name="additionalDetails"></textarea>
+            </div> 
+
+            <button type="button" onclick='getDeviceName("deviceNameInput", "adminForm","modify")' id="save" class="submitButton"> Save changes</button>
+        </form>
+    </div>
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+        <div>
+            <div id="dialogboxhead"></div>
+            <!--   <div id="dialogboxbody"></div> -->
+            <div id="dialogboxfoot"></div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+        /** Initialize the typeahead in a jQuery function **/
+        $(document).ready(function(){
+            $('#deviceNameInput').typeahead({
+                name: 'deviceName',
+                remote: { url:'/search?key=%QUERY' },
+                limit: 5
+            });
+        });
+    </script>
+</body>
+<!-- Bootstrap core JavaScript
+                            === === === === === === === === === === === === === === === === == -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="typeahead.min.js" type="text/javascript"></script>
+<script src="/views/dialog.js"></script>  
+<script>
+window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+</script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+</html>

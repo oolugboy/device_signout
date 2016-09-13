@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<!-- Custom stylings --> 
+<link rel="stylesheet" href="../styles/dialog.css">
+<link rel="stylesheet" href="../styles/addDeviceStyle.css">
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+            <p class="user"> Admin <%= user.username %></p>
+            </li>
+            <li>
+            <a href="/">Home</a>
+            </li>
+            <li>
+            <a href="/admin"> Admin Home </a>
+            </li>
+            <li>
+            <a href='/logout'> Logout</a>
+            </li>
+        </ul>
+    </div>
+    <div class="options">
+        <h3 class="optionsHeader"> Please enter the device details </h3>
+    </div>
+    <!-- Now for the form -->
+    <div class="container">
+        <form id="adminForm">
+            <div class="form-group">
+                <label id="deviceIdLabel" class="form-label" for="Name"> Device id *</label>
+                <input type="text" class="form-control" name="deviceId" id="deviceId" required="true" placeholder="Device Id">
+            </div>
+            <div class="form-group">
+                <label id="deviceNameLabel" class="form-label" for="Name"> Device Name * </label>
+                <input type="text" class="form-control" name="deviceName" id="deviceName" required="true" placeholder="Device Name">
+            </div>
+            <div class="form-group">
+                <label id="devCatLabel" for="devicecategory"> Select Device Category *</label>
+                <select id = "deviceCategory" class="form-control" required="true" >
+                    <option>IPads</option>
+                    <option>IPods/IPhones</option>
+                    <option>Android Phones</option>
+                    <option>Android Tablets</option>
+                    <option>Mozilla/Amazon Phones</option>
+                    <option>Amazon Tablets</option>
+                    <option>Windows</option>
+                </select>
+            </div>  
+            <div class="form-group">
+                <label for="OS">Operating System</label>
+                <input type="text" class="form-control" name="os" id="operatingSystem" placeholder="Operating System">
+            </div>  
+            <div class="form-group">
+                <label for="visualDescription">Visual Description</label>
+                <input type="text" class="form-control" id='visualDescription' name="visualDescription" placeholder="Visual Description">
+            </div>  
+            <div class="form-group">
+                <label for="resolution">Resolution</label>
+                <input type="text" class="form-control" id='resolution' name="resolution" placeholder="Resolution">
+            </div>  
+            <div class="form-group">
+                <label for="aspectRatio">Aspect Ratio</label>
+                <input type="text" class="form-control" id='aspectRatio' name="aspectRatio" placeholder="Aspect Ratio">
+            </div>  
+            <div class="form-group">
+                <label for="additionalDetails">Additional Details</label>
+                <textarea type="text" class="form-control" id="additionalDetails" name="additionalDetails"> </textarea>
+            </div> 
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" required="true" id="yesno"> I am sure I want to add the device. * </input>
+                </label>
+            </div>
+
+            <button type="button" onclick='adminSubmit("adminForm","addDevice")' class="submitButton">Add device</button>
+        </form>
+    </div>
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+        <div>
+            <div id="dialogboxhead"></div>
+            <!--   <div id="dialogboxbody"></div> -->
+            <div id="dialogboxfoot"></div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- Bootstrap core JavaScript
+                            === === === === === === === === === === === === === === === === == -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/views/dialog.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+</script>
+<script src="../../dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</html>

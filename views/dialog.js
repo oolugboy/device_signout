@@ -1,46 +1,193 @@
-function getDeviceName(inputId, formId,checkOut) {
-    // alert(" Try checkout was called " + inputId);
-    // Make sure that the user actually entered something 
+/** Javascript file that pertains to all the dialogues **/
+function getDeviceName(inputId, formId, op) {
+    // Make sure that the user actually entered the device name or id 
     if (document.getElementById(inputId).checkValidity() == true) {
+        /** Either the device name or the device Id 
+         * depending on the operation **/
         var devId = document.getElementById(inputId).value;
-        //  alert(" The value " + devId + " was valid ");
 
         $.ajax({
             url: "/nameQuery",
             type: "POST",
             data: {
-                deviceId: devId
+                deviceId: devId,
+                op : op
             },
             success: function(data, textStatus, jqXHR) {
-                // alert(" I succeeded " + data);
+                console.log(" We successfully gotten the name ");
                 if (typeof data !== 'undefined') {
                     var deviceName = JSON.parse(data);
 
                     if (deviceName == 'Does Not Exist')
-            confirm.render(null, "invalidId", null, inputId, formId);
+                    {
+                        if(op == 'checkout' || op == 'return')
+                            confirm.render(null, "invalidId", null, inputId, formId);
+                        else
+                            confirm.render(null, "invalidDeviceName", null, inputId. fomrId);
+                    }
                     else
-        {
-
-            if(checkOut == 'true')
-        {
-            confirm.render(null, "checkOutDevice", deviceName, inputId, formId);
-        }
-            else // The user just wants to return the device 
-            {
-                //alert(" The checkout is " + checkOut);
-                customSubmit(inputId,false);
-            }
-        }                            
+                    {
+                        if(op == 'checkOut')
+                        {
+                            confirm.render(null, "checkOutDevice", deviceName, inputId, formId);
+                        }
+                        else if(op == 'return') 
+                        {
+                            customSubmit(inputId,"return");
+                        }
+                        else if(op == 'remove')
+                        {
+                            confirm.render(null, "removeDevice", deviceName, inputId, formId);
+                        }
+                        else if (op == 'modify')
+                        {
+                            confirm.render(null, "modifyDevice", null, null, formId);
+                        }
+                    }                            
                 }
-                //alert(" The device name is " + deviceName);  
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert(textStatus, errorThrown);
             }
         });
     }
+    else
+    {
+        confirm.render(null, "incomplete", null, null, null);
+    }
+}
+function loadDetails(inputId)
+{
+    if(document.getElementById(inputId).checkValidity() == true)
+    {
+        var deviceName = document.getElementById(inputId).value;
+        $.ajax({
+            url: "/loadDetails",
+            type: "POST",
+            data: {deviceName: deviceName },
+    
+            success: function(data, textStatus, jqXHR) 
+            {
+                var details = JSON.parse(data);
+                document.getElementById("t_deviceName").innerHTML = details.deviceName;
+                document.getElementById("t_operatingSystem").innerHTML = details.operatingSystem;
+                document.getElementById("t_visualDescription").innerHTML = details.visualDescription;
+                document.getElementById("t_resolution").innerHTML = details.resolution;
+                document.getElementById("t_aspectRatio").innerHTML = details.aspectRatio;
+                document.getElementById("t_additionalDetails").innerHTML = details.additionalDetails;
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus, errorThrown);
+            }
+        });   
+    }
+    else 
+    {
+        confirm.render(null, 'incomplete', null, null, null);
+    }
+
 }
 
+
+/** Submit function that perains to the administrator operations **/
+function adminSubmit(formId, op)
+{
+    // alert(" called at all ");
+    if(document.getElementById(formId).checkValidity() == true || op == "modifyDevice" )
+    {
+        // alert("Valid document");
+        var deviceId, deviceName, deviceCategory, operatingSystem, visualDescription, resolution;
+        var aspectRatio, additionalDetails;
+        if(op == "addDevice")
+        {
+            deviceId = document.getElementById("deviceId").value;
+            deviceName = document.getElementById("deviceName").value;
+            deviceCategory = document.getElementById("deviceCategory").value;
+            operatingSystem = document.getElementById("operatingSystem").value;
+            visualDescription = document.getElementById("visualDescription").value;
+            resolution = document.getElementById("resolution").value;
+            aspectRatio = document.getElementById("aspectRatio").value;
+            additionalDetails = document.getElementById("additionalDetails").value;
+
+            $.ajax({ 
+                url: '/addDevice',
+                type: "POST",
+                data: {
+                    deviceId : deviceId,
+                deviceName : deviceName,
+                deviceCategory : deviceCategory,
+                operatingSystem : operatingSystem,
+                visualDescription : visualDescription,
+                resolution : resolution,
+                aspectRatio : aspectRatio,
+                additionalDetails : additionalDetails
+                },
+                success: function(data, textStatus, jqXHR){
+                    if(typeof data !== 'undefined'){
+                        var deviceName = JSON.parse(data);
+                        confirm.render(null,"addAlert",deviceName,null, null);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(textStatus, errorThrown);
+                }
+            })
+        }
+        if(op == 'removeDevice')
+        {
+            deviceName = document.getElementById('deviceName').value;
+            $.ajax({
+                url: '/removeDevice',
+                type: 'POST',
+                data: {
+                    deviceName : deviceName
+                },
+                success: function(data, textStatus, jqXHR)
+            {
+                console.log(" it was a success ");
+                if(typeof data !== 'undefined'){
+                    console.log(" The data is defined " + data);
+                    var deviceName = JSON.parse(data);
+                    console.log(" The device name loc " + deviceName);
+                    confirm.render(null, "removeAlert", deviceName, null, null);
+                }
+            },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert(textStatus, errorThrown);
+                }
+            })
+        }
+        if(op == 'modifyDevice')
+        {
+            $.ajax({
+                url: '/modifyDevice',
+                type: 'POST',
+                data: {                
+                    deviceName : document.getElementById('deviceName').value,
+                    operatingSystem : document.getElementById('operatingSystem').value,
+                    visualDescription : document.getElementById('visualDescription').value,
+                    resolution : document.getElementById('resolution').value,
+                    aspectRatio : document.getElementById('aspectRatio').value,
+                    additionalDetails : document.getElementById('additionalDetails').value
+            },
+            success: function(data, textStatus, jqXHR)
+            {
+                console.log(" it was a success ");
+                confirm.render(null, "modifyAlert", deviceName, null, null);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(textStatus, errorThrown);
+            }
+            })
+        }
+    }
+    else
+    {
+        confirm.render(null, "incomplete" , null, null, null);
+    }
+}
+/** Sumbit function for the dialogues concerning the checkout and 
+ * return operations **/
 function customSubmit(inputId, checkOut) {
     if (document.getElementById(inputId).checkValidity() == true) {
         var devId = document.getElementById(inputId).value;
@@ -87,7 +234,8 @@ function CustomConfirm() {
         if (op == 'checkOutDevice') {
             document.getElementById('dialogboxhead').innerHTML = "Are you sure you want to check out the " + deviceName + " ?";
             //   document.getElementById('dialogboxbody').innerHTML = dialog;
-            document.getElementById('dialogboxfoot').innerHTML = '<button class="dialOption" onclick="confirm.yes(\'' + op + '\',\'' + inputId + '\')">Yes</button> <button class="dialOption" onclick="confirm.no()">No</button>';
+            document.getElementById('dialogboxfoot').innerHTML = 
+                '<button class="dialOption" onclick="confirm.yes(\'' + op + '\',\'' + inputId + '\',\'' + null + '\')">Yes</button> <button class="dialOption" onclick="confirm.no()">No</button>';
         } else if (op == 'checkOutAlert') {
             document.getElementById('dialogboxhead').innerHTML = " You have just checked out the " + deviceName + " !";
             document.getElementById('dialogboxfoot').innerHTML = '<button class="dialOption" onclick="confirm.okay()">Okay</button>';
@@ -100,25 +248,63 @@ function CustomConfirm() {
             document.getElementById('dialogboxhead').innerHTML = " You have just returned the " + deviceName + " !";
             document.getElementById('dialogboxfoot').innerHTML = '<button class="dialOption" onclick="confirm.okay()">Okay</button>';                
         }
+        else if(op == 'addAlert')
+        {
+            document.getElementById('dialogboxhead').innerHTML = " You have just added the " + deviceName + " !";
+            document.getElementById('dialogboxfoot').innerHTML ='<button class ="dialOption" onclick="confirm.okay()">Okay</button>';
+        }
+        else if (op == 'removeDevice') {
+            document.getElementById('dialogboxhead').innerHTML = " Are you sure you want to remove the " + deviceName + " ?";
+            document.getElementById('dialogboxfoot').innerHTML = 
+                '<button class="dialOption" onclick="confirm.yes(\'' + op + '\',\'' + null + '\', \'' + formId + '\')">Yes</button> <button class="dialOption" onclick="confirm.no()">No</button>';
+        }
+        else if(op == 'removeAlert'){
+            document.getElementById('dialogboxhead').innerHTML = " You have just removed the " + deviceName + " !";
+            document.getElementById('dialogboxfoot').innerHTML ='<button class ="dialOption" onclick="confirm.okay()">Okay</button>';
+        }
+        else if(op == 'invalidDeviceName'){
+            document.getElementById('dialogboxhead').innerHTML = " There does not exist a device with the entered device name ";
+            document.getElementById('dialogboxfoot').innerHTML = '<button class="dialOption" onclick="confirm.okay()">Okay</button>';
+        }
+        else if (op == 'modifyDevice') {
+            document.getElementById('dialogboxhead').innerHTML = " Are you sure you want to save the changes ?";
+            document.getElementById('dialogboxfoot').innerHTML = 
+                '<button class="dialOption" onclick="confirm.yes(\'' + op + '\',\'' + null + '\', \'' + formId + '\')">Yes</button> <button class="dialOption" onclick="confirm.no()">No</button>';
+        }
+        else if(op == 'modifyAlert'){
+            document.getElementById('dialogboxhead').innerHTML = " Your changes have been successfully saved ";
+            document.getElementById('dialogboxfoot').innerHTML ='<button class ="dialOption" onclick="confirm.okay()">Okay</button>';
+        }
+        else if(op == 'incomplete')
+        {
+            document.getElementById('dialogboxhead').innerHTML = " Please make sure that you have filled all the asterisk marked fields ";
+            document.getElementById('dialogboxfoot').innerHTML ='<button class ="dialOption" onclick="confirm.okay()">Okay</button>';
+        }
     }
+
 
     this.no = function() {
         document.getElementById('dialogbox').style.display = "none";
         document.getElementById('dialogoverlay').style.display = "none";
     }
-    this.yes = function(op, inputId) {
+    this.yes = function(op, inputId, formId) {
         if (op == "checkOutDevice") {
-            customSubmit(inputId, true);
+            customSubmit(inputId, "checkOut");
+        }
+        else if(op == "removeDevice"){
+            adminSubmit(formId,'removeDevice');
+        }
+        else if(op == 'modifyDevice'){
+            adminSubmit(formId, 'modifyDevice');
         }
         confirm.clearDialogBox();
     }
     this.okay = function() {
         confirm.clearDialogBox();
     }
-    this.clearDialogBox = function(inputId) {
+    this.clearDialogBox = function() {
         document.getElementById('dialogbox').style.display = "none";
         document.getElementById('dialogoverlay').style.display = "none";
-        //document.getElementById(inputId).value="";
     }
 }
 var confirm = new CustomConfirm();

@@ -1,0 +1,217 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+html
+{
+    height: 100%;
+ /*   border: 2px solid purple; */
+}
+ body {
+    overflow-x: hidden;
+    height: 90%;
+  /*  border: 2px solid grey; */
+ }
+ head{
+   /*  border: 2px solid blue; */
+    height: 0%;
+}
+
+/* Toggle Styles */
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+   /**  border: 2px solid lime; **/
+    height: 100%;
+}
+
+#wrapper.toggled {
+    padding-left: 250px;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    top: 0px;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #000;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  /*  border: 2px solid pink; */
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+}
+
+#wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+}
+
+/* Sidebar Styles */
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #999999;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 250px;
+    }
+
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 250px;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        padding: 20px;
+        position: relative;
+    }
+
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+/** TODO delete this after figuring out the transition **/
+input.form-control
+{
+    /** height:35px; **/
+    width:300px;
+    left: 30%;
+    top: -30px;
+    position:relative;
+  /*  border: 2px solid cyan; */
+}
+select.form-control
+{
+    width:300px;
+    position:relative;
+    top: -30px;
+    left:30%; 
+}
+label.form-label
+{
+  /*  border: 2px solid orange; */
+}
+div.options
+{
+    position: relative;
+    top: 10%;
+    left: 15.75%;
+    width: 40%;
+  /*  border: 6px solid indigo; */
+}
+h3.optionsHeader
+{
+    position: relative;
+    top: 0px;
+    right: 0px;
+ /*   border: 6px solid black; */
+}
+.hide-block{
+    display: none;
+}
+p.user
+{
+    color: white;
+}
+div.container
+{
+    position: relative;
+   /**  border: 2px solid red; **/
+    bottom: -15%;
+    height: 55%;
+}
+div.form-group
+{
+    width: 50%;
+   /* border: 2px solid black; */
+}
+button.submitButton
+{
+    position: relative;
+    background-color: black; /* Green */
+    border: none;
+    /*  background: none; */
+    color: white;
+    padding: 10px 20px; 
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+}
+#additionalDetails
+{
+    width:400px;
+    height: 100px;
+}

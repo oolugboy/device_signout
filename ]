@@ -10,7 +10,9 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 // custom libraries
+// routes
 var route = require('./route');
+// model
 var Model = require('./model');
 
 var app = express();
@@ -115,25 +117,6 @@ app.get('/amazonTabletsPageMore', route.amazonTabletsMoreVar);
 app.get('/windowsPage', route.windowsVar);
 
 app.get('/windowsPageMore', route.windowsMoreVar);
-
-app.get('/admin', route.adminVar);
-
-app.get('/addDevice', route.addDeviceVar);
-
-app.post('/addDevice', route.addDevicePost);
-
-app.get('/removeDevice', route.removeDeviceVar);
-
-app.post('/removeDevice', route.removeDevicePost);
-
-app.get('/search', route.searchVar);
-
-app.get('/modifyDevice', route.modifyDeviceVar);
-
-app.post('/modifyDevice', route.modifyDevicePost);
-
-app.post('/loadDetails', route.loadDetailsPost);
-
 
 /********************************/
 

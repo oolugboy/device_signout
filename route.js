@@ -41,32 +41,59 @@ var deviceCategory = function(req, res, next) {
     }
 };
 
-var deviceName;// Name of the device that should be checked out 
+var deviceName;// Name of the device that is being operated on 
 var getDeviceNamePost = function(req, res)
 {      
     console.log(" WE FINALLY DID IT!");
 
     console.log(" In here ");
     var deviceId = JSON.stringify((req.body.deviceId));
+    var op = req.body.op;
     console.log(" The device Id is " + deviceId);
     if(typeof(deviceId) !== 'undefined')
     {
-        console.log(" Before the query "); 
-        connection.query('SELECT * FROM devicetable WHERE id='+ deviceId, function(err, row){
-            if(err)
-            throw err;
-        console.log(" The amount " + row.length);
-        if(row.length == 0)
-        {  
-            checkOutMessage = 'Does Not Exist';  
-            res.send(JSON.stringify(checkOutMessage));      
+        console.log(" Before the query the op " + op); 
+        if(op == 'remove') /** The name of the device that is to be removed **/
+        {
+            connection.query('SELECT * FROM devicetable WHERE deviceName='+ deviceId, function(err, row){
+                if(err)
+                    throw err;
+            console.log(" The remove amount " + row.length);
+            if(row.length == 0)
+            {  
+                checkOutMessage = 'Does Not Exist';  
+                res.send(JSON.stringify(checkOutMessage));      
+            }
+            else
+            {     
+                deviceName = row[0].deviceName; 
+                res.send(JSON.stringify(deviceName));
+            }           
+            });
         }
-        else
-        {     
-            deviceName = row[0].deviceName; 
-            res.send(JSON.stringify(deviceName));
-        }           
-        });
+        else if (op == "modify")// Do nothing in the case of modify
+        {
+            console.log(" In the correct if ");
+            res.send(JSON.stringify("modify"));           
+        }
+        else /** In the case of checkout or return **/
+        {
+            connection.query('SELECT * FROM devicetable WHERE id='+ deviceId, function(err, row){
+                if(err)
+                throw err;
+            console.log(" The amount " + row.length);
+            if(row.length == 0)
+            {  
+                checkOutMessage = 'Does Not Exist';  
+                res.send(JSON.stringify(checkOutMessage));      
+            }
+            else
+            {     
+                deviceName = row[0].deviceName; 
+                res.send(JSON.stringify(deviceName));
+            }           
+            });
+        }
     }
 }
 
@@ -203,16 +230,8 @@ var registerPost = function(req, res, next) {
             console.log(" Existent model " + model + " " + model.firstname);
             res.render('registerPage', {title: 'Register', errorMessage: 'Error: Username already exists!'});
         } else {
-            //****************************************************//
-            // MORE VALIDATION GOES HERE(E.G. PASSWORD VALIDATION)
-            //****************************************************//
             var password = user.password;
             var hash = bcrypt.hashSync(password);
-            console.log("username" + user.username);
-            console.log("lastname " + user.lastname);
-            console.log("firstname " + user.firstname);
-            console.log("password " + user.password);
-            console.log("confirmed password " + user.password_confirm);
 
             if(user.password != user.password_confirm)
             {
@@ -465,7 +484,230 @@ var windowsMoreVar = function(req,res){
     }    
 };
 
+var adminVar = function(req, res){
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        res.render('adminPage', {user: currUser}); 
+    }
+};
+var addDeviceVar = function(req, res){
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        res.render('addDevicePage', {user: currUser}); 
+    }
+};
+var addDevicePost = function(req, res){
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        console.log(" In add Device post ");
+        var newDev = req.body; 
+        var deviceName = newDev.deviceName;
+        var id = newDev.deviceId;
+        console.log(" The device id is " + id);
+        var deviceCategory = parseDeviceCategory(newDev.deviceCategory);
+        var operatingSystem = newDev.operatingSystem;
+        var visualDescription = newDev.visualDescription;
+        var resolution = newDev.resolution;
+        var aspectRatio = newDev.aspectRatio;
+        var additionalDetails = newDev.additionalDetails;
 
+        /** TODO ask if we are supposed to check if someone is entering a duplicate id **/ 
+        if(typeof id !== 'undefined')
+        {
+            connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?)',[id, deviceName,
+                    deviceCategory,operatingSystem, visualDescription, resolution, aspectRatio, additionalDetails,
+                    'Y', 'Nobody'], function(err){
+                        if(err)
+                            throw err;
+                        res.send(JSON.stringify(deviceName));
+                    });
+        }
+    }
+};
+var removeDeviceVar = function(req, res){
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        res.render('removeDevicePage',{user: currUser});
+    }
+};
+var searchVar = function(req, res){
+    console.log(" In the search var ");
+    console.log(" The key " + req.query.key);
+    connection.query('SELECT deviceName from devicetable WHERE deviceName LIKE "%'+req.query.key+'%"',
+            function(err, rows, fields)
+            {
+                if(err)
+                    throw err;
+                var data=[];
+                for(i=0;i<rows.length;i++)
+                {
+                    data.push(rows[i].deviceName);
+                }
+                res.send(JSON.stringify(data));
+            });
+};
+var removeDevicePost = function(req, res){
+    var deviceName;
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        connection.query('SELECT * from devicetable WHERE deviceName=?', [req.body.deviceName],
+                function(err, rows)
+                {
+                    if(err)
+                        throw err;
+                    console.log(" The amount is " + rows.length);
+                    deviceName = rows[0].deviceName;
+                    console.log(" The deviceName is " + deviceName);
+                    connection.query('DELETE FROM devicetable WHERE deviceName=?', req.body.deviceName,
+                    function(err, delRow)
+                    {
+                        if(err)
+                            throw err;
+                    });
+                    console.log("Done deleting " + deviceName);
+                    res.send(JSON.stringify(deviceName));
+                }); 
+    }
+};
+var modifyDeviceVar = function(req, res)
+{
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        res.render('modifyDevicePage',{user:currUser, deviceName : "n/a",
+            operatingSystem : "n/a", visualDescription : "n/a", resolution: "n/a", 
+            aspectRatio: "n/a", additionalDetails: "n/a"});
+    }
+};
+var currId; // The ID of the device whose details are about to be modified 
+var modifyDevicePost = function(req, res)
+{
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        console.log(" about the get the original " + currId);
+        var deviceName, operatingSystem, visualDescription, resolution, aspectRatio, additionalDetails;
+        connection.query('SELECT * FROM devicetable WHERE id=?', currId,
+                function(err,rows)
+                {
+                    if(err)
+                        throw err;
+                    if(typeof req.body.deviceName === "undefined" || req.body.deviceName == "")
+                    {
+                        console.log(" should be in here ")
+                        deviceName = rows[0].deviceName;//Use the prior value
+                    }
+                    else
+                    {
+                        console.log(" Why am I in here ");
+                        deviceName = req.body.deviceName;//Use the entered value
+
+                    }
+                    if(typeof req.body.operatingSytem === "undefined" || req.body.operatingSystem == "")
+                        operatingSystem = rows[0].operatingSystem;
+                    else
+                        operatingSystem = req.body.operatingSystem;
+                    if(typeof req.body.visualDescription === "undefined" || req.body.visualDescription == "")
+                        visualDescription = rows[0].visualDescription;
+                    else
+                        visualDescription = req.body.visualDescription;
+                    if(typeof req.body.resolution === "undefined" || req.body.resolution == "")
+                        resolution = rows[0].resolution;
+                    else
+                        resolution = req.body.resolution;
+                    if(typeof req.body.aspectRatio === "undefined" || req.body.aspectRatio == "")
+                        aspectRatio = rows[0].aspectRatio;
+                    else
+                        aspectRatio = req.body.aspectRatio;
+                    if(typeof req.body.additionalDetails === "undefined" || req.body.additionalDetails == "")
+                        additionalDetails = rows[0].additionalDetails;
+                    else
+                        additionalDetails = req.body.additionalDetails;
+                    console.log(" About to delete where the id = " + currId + " the deviceName is " + deviceName); 
+                    connection.query('DELETE FROM devicetable WHERE id=?', currId, 
+                        function(err, dummy)
+                        {
+                           if(err)
+                                throw err;                            
+                                connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?)',[currId, deviceName,
+                                rows[0].deviceCategory, operatingSystem, visualDescription, resolution, aspectRatio, additionalDetails,
+                                rows[0].available, rows[0].currInUseBy], 
+                                function(err)
+                                {
+                                    if(err)
+                                        throw err;    
+                                    res.send("Success");
+                                });
+                        });
+                });
+    }
+};
+var loadDetailsPost = function(req,res)
+{
+    console.log(" In load details ");
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        connection.query('SELECT * FROM devicetable WHERE deviceName=?',[req.body.deviceName],
+                function(err, rows)
+                {
+                    if(err)
+                        throw err;
+                    currId = rows[0].id;
+                    
+                    var data =  {deviceName : rows[0].deviceName , operatingSystem : rows[0].operatingSystem, visualDescription : rows[0].visualDescription,
+                    resolution : rows[0].resolution, aspectRatio : rows[0].aspectRatio, additionalDetails : rows[0].additionalDetails};
+                    res.send(JSON.stringify(data));
+                });
+    }
+};
+function parseDeviceCategory(deviceCategory)
+{
+    if(deviceCategory == 'IPads')
+        return 'iPad';
+    else if(deviceCategory == 'IPods/IPhones')
+        return 'iPods/iPhones';
+    else if(deviceCategory == 'Amazon Tablets')
+        return 'amazonTablets';
+    else if(deviceCategory == 'Mozilla/Amazon Phones')
+        return 'mozilla/amazon';
+    else if(deviceCategory == 'Android Phones')
+        return 'androidPhones';
+    else if (deviceCategory == 'Windows')
+        return 'windows';
+    else if(deviceCategory == 'Android Tablets')
+        return 'androidTablets';
+
+}
 // 404 not found
 var notFound404 = function(req, res, next) {
     res.status(404);
@@ -484,23 +726,19 @@ module.exports.getDeviceNamePost = getDeviceNamePost;
 module.exports.deviceCategoryPost = deviceCategoryPost;
 
 // Log in
-// GET
 module.exports.login = login;
-// POST
+
 module.exports.loginPost = loginPost;
 
-// GET
 module.exports.register = register;
-// POST
+
 module.exports.registerPost = registerPost;
 
-// sign out
 module.exports.logOut = logOut;
 
 // 404 not found
 module.exports.notFound404 = notFound404;
 
-// For the ipads page
 module.exports.iPadsVar = iPadsVar;
 
 module.exports.iPadsMoreVar = iPadsMoreVar;
@@ -529,3 +767,20 @@ module.exports.windowsVar = windowsVar;
 
 module.exports.windowsMoreVar = windowsMoreVar;
 
+module.exports.adminVar = adminVar;
+
+module.exports.addDeviceVar = addDeviceVar;
+
+module.exports.addDevicePost = addDevicePost;
+
+module.exports.removeDeviceVar = removeDeviceVar;
+
+module.exports.removeDevicePost = removeDevicePost;
+
+module.exports.searchVar = searchVar;
+
+module.exports.modifyDeviceVar = modifyDeviceVar;
+
+module.exports.modifyDevicePost = modifyDevicePost;
+
+module.exports.loadDetailsPost = loadDetailsPost;

@@ -13,23 +13,30 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <!-- Custom stylings --> 
 <link rel="stylesheet" href="../styles/dialog.css">
-<link rel="stylesheet" href="../styles/adminStyle.css">
+<link rel="stylesheet" href="../styles/addDeviceStyle.css">
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
 </head>
 
 <body>
 <div id="wrapper">
-    <p class="welcomeMessage">
-        Administrator <strong><%= user.username %> </strong>
-    </p>
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
         <ul class="sidebar-nav">
             <li class="sidebar-brand">
-            <p class="user"> Navigation Options</p>
+            <p class="user"> Admin <%= user.username %></p>
             </li>
             <li>
             <a href="/">Home</a>
+            </li>
+            <li>
+            <a href="/admin"> Admin Home </a>
             </li>
             <li>
             <a href='/logout'> Logout</a>
@@ -37,15 +44,33 @@
         </ul>
     </div>
     <div class="options">
-        <h3 class="optionsHeader"> Please choose from the following options</h3>
-        <button class="optionsButton" onclick="location.href='/addDevice'" id="addDevice"> Add a Device </button>
-        <button class="optionsButton" onclick="location.href='/removeDevice'" id="remDevice"> Remove a Device </button>
-        <button class="optionsButton" onclick="location.href='/modifyDevice'" id="modDevice"> Modify the device details </button>
-        <button class="optionsButton" onclick="location.href='/addAdmin'" id="addAdmin"> Add an Adminstrator </button> 
+        <h3 class="optionsHeader"> Please enter the employee details </h3>
+    </div>
+    <!-- Now for the form -->
+    <div class="container">
+        <form id="adminForm">
+            <div class="form-group">
+                <label id="firstNameLabel" class="form-label" for="Name"> First Name  *</label>
+                <input type="text" class="form-control" name="firstName" id="firstName" required="true" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <label id="lastNameLabel" class="form-label" for="Name"> Last Name * </label>
+                <input type="text" class="form-control" name="lastName" id="lastName" required="true" placeholder="Last Name">
+            </div>
+
+            <button type="button" onclick='getUserName(null,"removeUser")' class="submitButton">Add device</button>
+        </form>
+    </div>
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+        <div>
+            <div id="dialogboxhead"></div>
+            <!--   <div id="dialogboxbody"></div> -->
+            <div id="dialogboxfoot"></div>
+        </div>
     </div>
 </div>
-
-
+</body>
 <!-- Bootstrap core JavaScript
                             === === === === === === === === === === === === === === === === == -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -57,5 +82,4 @@ window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.
 <script src="../../dist/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-</body>
 </html>

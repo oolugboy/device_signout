@@ -107,3 +107,13 @@ p.retInstr
   left: 0px;
   font-size: 1.5em;
 }
+p.errMessage
+{
+  position: fixed;
+  top: 150px;
+  right: 500px;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: red;
+}
+

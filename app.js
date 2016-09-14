@@ -71,6 +71,8 @@ app.post('/', route.deviceCategoryPost);
 
 app.post('/nameQuery', route.getDeviceNamePost);
 
+app.post('/userNameQuery', route.getUserNamePost);
+
 // signin
 // GET
 app.get('/Login', route.login);
@@ -133,6 +135,16 @@ app.get('/modifyDevice', route.modifyDeviceVar);
 app.post('/modifyDevice', route.modifyDevicePost);
 
 app.post('/loadDetails', route.loadDetailsPost);
+
+app.get('/adminReject', route.adminRejectVar);
+
+app.get('/addAdmin', route.addAdminVar);
+
+app.post('/addAdmin', route.addAdminPost);
+
+app.get('/searchName',route.searchNameVar);
+
+
 
 
 /********************************/

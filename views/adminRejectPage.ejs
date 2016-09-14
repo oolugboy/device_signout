@@ -8,9 +8,7 @@
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <!-- Custom CSS styles -->
-<link rel="stylesheet" href="../styles/logOutButton.css">
 <link href="../styles/simpleSideBar.css" rel="stylesheet">
-<link href="../styles/deviceTable.css" rel="stylesheet">
 
 </head>
 <body>
@@ -24,10 +22,7 @@
             </p>
             </li>
             <li>
-            <a href="/">Home</DEL></a>
-        </li>
-        <li>
-        <a href=<%= link %>>More Device Details</a>
+            <a href="/">Home</a>
         </li>
         <li id="goAdmin">
         <a href="/admin" > Go Admin </a>
@@ -41,33 +36,13 @@
 <script>
     adminHide("goAdmin", <%= admin %>); 
 </script>
-
-
+<style>
+    p.user { color: white; }
+</style>
 <!-- /#sidebar-wrapper -->
 
 <div class="container">
-    <h2> <%= title %></h2> 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th> DeviceName </th>
-                    <th> Operating System </th>
-                    <th> Aspect Ratio </th>
-                </tr>      
-            </thead>
-
-            <tbody>     
-            <% rows.forEach(function(entry){ %>     
-            <tr> 
-                <td> <%= entry.deviceName %> </td>
-                <td> <%= entry.operatingSystem %> </td>
-                <td> <%= entry.aspectRatio %> </td>
-            </tr>             
-            <% }) %>
-            </tbody>
-        </table> 
-    </div>
+    <h3> You do not have the adminstrator priviledges the view the contents of the page you are trying to access.</h3> 
 </div>
 </body>
 </html>

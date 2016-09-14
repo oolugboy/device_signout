@@ -55,8 +55,13 @@
             </li>
         </ul>
     </div>
-
-    
+    <div id="goAdmin" class="goAdmin">
+        <button class="goAdmin" id="adminButton" onclick="location.href='/admin'"> Go Admin </button>
+    </div> 
+    <script src="/views/adminScript.js"></script>
+    <script>
+        adminHide("goAdmin", <%= admin %>); 
+    </script>
     <div class="checkOut">
         <form id="checkOutForm" action="/" method="POST">
             <p class="swipeInstruction"> Please scan your device to enter it's ID for check out </p>
@@ -71,6 +76,7 @@
             <button class="checkOutButton" onclick='getDeviceName("returnIdInput","returnForm","return")' type="button"> Return Device </button>
         </form>
     </div>
+   
     <div id="dialogoverlay"></div>
     <div id="dialogbox">
         <div>

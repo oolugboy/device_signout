@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<!-- Custom stylings --> 
+<link rel="stylesheet" href="../styles/removeDeviceStyle.css">
+<link rel="stylesheet" href="../styles/dialog.css">
+</head>
+
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+            <p class="user"> Admin <%= user %></p>
+            </li>
+            <li>
+            <a href="/">Home</a>
+            </li>
+            <li>
+            <a href="/admin"> Admin Home </a>
+            </li>
+            <li>
+            <a href='/logout'> Logout</a>
+            </li>
+        </ul>
+    </div>
+    <!-- Now for the form -->
+    <div class="container">
+        <h3 class="optionsHeader"> Please enter the username of the person you want to add * </h3>
+        <form id="adminForm">
+            <div class="form-group">
+                <input type="text" class="form-control tt-query" name="username" id="username" required="true" autocomplete="off" placeholder="Username">
+                <button type="button" onclick='getUserName("username","adminForm","addAdmin")' class="submitButton"> Add as Admin</button>
+            </div>
+        </form>
+    </div>
+    <div id="dialogoverlay"></div>
+    <div id="dialogbox">
+        <div>
+            <div id="dialogboxhead"></div> 
+            <div id="dialogboxfoot"></div>
+        </div> 
+    </div> 
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+/** Initialize the typeahead in a jQuery function **/
+$(document).ready(function(){
+        $('input.form-control').typeahead({
+        name: 'userName',
+        remote: { url:'/searchName?key=%QUERY' },
+        limit: 5
+    });
+        });
+</script>
+</body>
+<!-- Bootstrap core JavaScript
+                            === === === === === === === === === === === === === === === === == -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="typeahead.min.js" type="text/javascript"></script>
+<script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+<script src="/views/dialog.js"></script> 
+<script>
+window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+</script> 
+<script src="../../dist/js/bootstrap.min.js"></script>
+</html>

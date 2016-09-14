@@ -23,21 +23,35 @@ connection.query('USE devicesignout');
 
 /* This should store the object of the current user  **/
 var currUser;
+/** This variable is to store whether the user is an admin or not **/
+var admin;
 
 // Device Category home page 
 var deviceCategory = function(req, res, next) {
     if(!req.isAuthenticated()) {
         res.redirect('/Login');
     } else {
-
         var user = req.user;
-
         if(user !== undefined) {
             user = user.toJSON();
         }
-        //res.write(" Something ");
-        /** Figure out what to do about the title **/
-        res.render('deviceCategoryPage', {user: user});
+        /** Check if the user is and adminsistrator **/
+        connection.query("SELECT * FROM employees WHERE username=? AND admin='Y'", [currUser.username], 
+            function(err, rows)
+            {
+                if(err)
+                    throw err;
+                if(rows.length > 0)
+                {
+                    admin =  "true";
+                }
+                else
+                {
+                    admin = "false";
+                }
+                console.log(" The actual admin is " + admin);
+                res.render('deviceCategoryPage', {user: user, admin : admin});
+            });
     }
 };
 
@@ -96,7 +110,27 @@ var getDeviceNamePost = function(req, res)
         }
     }
 }
-
+var getUserNamePost = function(req, res)
+{
+    connection.query("SELECT * from employees where username=?",[req.body.username], 
+            function(err, rows){
+                if(err)
+                    throw err;
+                var data = {firstName : "", lastName : ""};
+                console.log(" The server username " + req.body.username);
+                if(rows.length == 0)
+                {
+                    data.firstName = "Does not exist ";
+                    res.send(JSON.stringify(data));
+                }
+                else
+                {
+                    data.firstName = rows[0].firstname;
+                    data.lastName = rows[0].lastname;
+                    res.send(JSON.stringify(data));
+                }
+            });
+};
 /** handles the updates of the database **/
 var deviceCategoryPost = function(req, res, next){
     console.log(" The form has been submitted " + req.body.checkOut);
@@ -107,7 +141,7 @@ var deviceCategoryPost = function(req, res, next){
     {
         var device = req.body;
         console.log(" Are we checking out ? " + device.checkOut);
-        if(typeof(device.checkOutId) !== 'undefined' && device.checkOut == "true")
+        if(typeof(device.checkOutId) !== 'undefined' && device.checkOut == "checkOut")
         {             
             console.log(" The device id is " + device.checkOutId);            
             connection.query("SELECT * FROM employees WHERE username='" + currUser.username + "'", function(err, row){
@@ -124,14 +158,14 @@ var deviceCategoryPost = function(req, res, next){
                 });
                 res.send(JSON.stringify(deviceName));
             }
-            else /** Not possible bur for debugging purposes **/
+            else /** Not possible but for debugging purposes **/
             {
                 console.log(" Cannot find employee?!! ");
             }       
             });
         }
         /** This is the case where the user wants to return the device from the home page **/
-        else if(typeof(device.checkOutId) !== 'undefined' && device.checkOut == "false")
+        else if(typeof(device.checkOutId) !== 'undefined' && device.checkOut == "return")
         {
             console.log(" We are returning ");
             connection.query("UPDATE devicetable SET available = 'Y', currInUseBy = 'Nobody' WHERE id=" + device.checkOutId); 
@@ -283,7 +317,7 @@ var iPadsVar = function(req,res){
             initRows = rows;
             if(err)
             throw err;        
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available iPad devices', link:'/iPadsPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available iPad devices', link:'/iPadsPageMore'});  
         });  
     }    
 };
@@ -298,7 +332,7 @@ var iPadsMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['iPad'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All iPad devices', link:'/iPadsPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All iPad devices', link:'/iPadsPage'});  
         });  
     }    
 };
@@ -315,7 +349,7 @@ var iPodsOrIPhonesVar = function(req,res){
             if(err)
             throw err;        
         // console.log(" About to get the right title ");
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available iPod/iPhone devices', link:'/iPodsOrIPhonesPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available iPod/iPhone devices', link:'/iPodsOrIPhonesPageMore'});  
         });  
     }    
 };
@@ -329,7 +363,7 @@ var iPodsOrIPhonesMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['iPods/iPhones'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All iPod/iPhone devices', link:'/iPodsOrIPhonesPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All iPod/iPhone devices', link:'/iPodsOrIPhonesPage'});  
         });  
     }    
 };
@@ -345,7 +379,7 @@ var androidPhonesVar = function(req,res){
             initRows = rows;
             if(err)
             throw err;        
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available Android Phones', link:'/androidPhonesPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available Android Phones', link:'/androidPhonesPageMore'});  
         });  
     }    
 };
@@ -359,7 +393,7 @@ var androidPhonesMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['androidPhones'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All Android Phones', link:'/androidPhonesPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All Android Phones', link:'/androidPhonesPage'});  
         });  
     }    
 };
@@ -375,7 +409,7 @@ var androidTabletsVar = function(req,res){
             initRows = rows;
             if(err)
             throw err;        
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available Android Tablets', link:'/androidTabletsPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available Android Tablets', link:'/androidTabletsPageMore'});  
         });  
     }    
 };
@@ -389,7 +423,7 @@ var androidTabletsMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['androidTablets'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All Android Tablets', link:'/androidTabletsPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All Android Tablets', link:'/androidTabletsPage'});  
         });  
     }    
 };
@@ -405,7 +439,7 @@ var mozillaOrAmazonVar = function(req,res){
             initRows = rows;
             if(err)
             throw err;        
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available Mozilla/Amazon Phones', link:'/mozillaOrAmazonPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available Mozilla/Amazon Phones', link:'/mozillaOrAmazonPageMore'});  
         });  
     }    
 };
@@ -419,7 +453,7 @@ var mozillaOrAmazonMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['mozilla/amazon'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All Mozilla/Amazon Phones', link:'/mozillaOrAmazonPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All Mozilla/Amazon Phones', link:'/mozillaOrAmazonPage'});  
         });  
     }    
 };
@@ -435,7 +469,7 @@ var amazonTabletsVar = function(req,res){
             initRows = rows;
             if(err)
             throw err;        
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available Amazon Tablets ', link:'/amazonTabletsPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available Amazon Tablets ', link:'/amazonTabletsPageMore'});  
         });  
     }    
 };
@@ -449,7 +483,7 @@ var amazonTabletsMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['amazonTablets'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All Amazon Tablets', link:'/amazonTabletsPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All Amazon Tablets', link:'/amazonTabletsPage'});  
         });  
     }    
 };
@@ -465,7 +499,7 @@ var windowsVar = function(req,res){
             initRows = rows;
             if(err)
             throw err;        
-        res.render('initDeviceTablePage', {user: currUser.username, rows : rows, title:'Available Windows Devices', link:'/windowsPageMore'});  
+        res.render('initDeviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'Available Windows Devices', link:'/windowsPageMore'});  
         });  
     }    
 };
@@ -479,7 +513,7 @@ var windowsMoreVar = function(req,res){
         connection.query('SELECT * FROM devicetable WHERE deviceCategory=?',['windows'], function(err, rows){
             if(err)
             throw err;        
-        res.render('deviceTablePage', {user: currUser.username, rows : rows, title:'All Windows Devices', link:'/windowsPage'});  
+        res.render('deviceTablePage', {admin : admin , user: currUser.username, rows : rows, title:'All Windows Devices', link:'/windowsPage'});  
         });  
     }    
 };
@@ -488,6 +522,10 @@ var adminVar = function(req, res){
     if(!req.isAuthenticated())
     {
         res.redirect('/Login');
+    }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
     }
     else
     {
@@ -498,6 +536,10 @@ var addDeviceVar = function(req, res){
     if(!req.isAuthenticated())
     {
         res.redirect('/Login');
+    }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
     }
     else
     {
@@ -526,7 +568,7 @@ var addDevicePost = function(req, res){
         /** TODO ask if we are supposed to check if someone is entering a duplicate id **/ 
         if(typeof id !== 'undefined')
         {
-            connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?)',[id, deviceName,
+            connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?,NULL)',[id, deviceName,
                     deviceCategory,operatingSystem, visualDescription, resolution, aspectRatio, additionalDetails,
                     'Y', 'Nobody'], function(err){
                         if(err)
@@ -540,6 +582,10 @@ var removeDeviceVar = function(req, res){
     if(!req.isAuthenticated())
     {
         res.redirect('/Login');
+    }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
     }
     else
     {
@@ -562,6 +608,22 @@ var searchVar = function(req, res){
                 res.send(JSON.stringify(data));
             });
 };
+var searchNameVar = function(req, res){
+    console.log(' In the search name var ');
+    connection.query('SELECT userName from employees WHERE userName LIKE "%' + req.query.key + '%"',
+            function(err, rows)
+            {
+                if(err)
+                    throw err;
+                var data = [];
+                for(i = 0; i < rows.length; i++)
+                {
+                    data.push(rows[i].userName);
+                }
+                res.send(JSON.stringify(data));
+            });
+};
+
 var removeDevicePost = function(req, res){
     var deviceName;
     if(!req.isAuthenticated())
@@ -595,9 +657,13 @@ var modifyDeviceVar = function(req, res)
     {
         res.redirect('/Login');
     }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
+    }
     else
     {
-        res.render('modifyDevicePage',{user:currUser, deviceName : "n/a",
+        res.render('modifyDevicePage',{user:currUser, deviceId : "n/a", deviceName : "n/a",
             operatingSystem : "n/a", visualDescription : "n/a", resolution: "n/a", 
             aspectRatio: "n/a", additionalDetails: "n/a"});
     }
@@ -618,6 +684,10 @@ var modifyDevicePost = function(req, res)
                 {
                     if(err)
                         throw err;
+                    if(typeof req.body.deviceId === 'undefined' || req.body.deviceId == "")
+                        deviceId = rows[0].id;
+                    else
+                        deviceId = req.body.deviceId;
                     if(typeof req.body.deviceName === "undefined" || req.body.deviceName == "")
                     {
                         console.log(" should be in here ")
@@ -655,7 +725,7 @@ var modifyDevicePost = function(req, res)
                         {
                            if(err)
                                 throw err;                            
-                                connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?)',[currId, deviceName,
+                                connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?,NULL)',[deviceId, deviceName,
                                 rows[0].deviceCategory, operatingSystem, visualDescription, resolution, aspectRatio, additionalDetails,
                                 rows[0].available, rows[0].currInUseBy], 
                                 function(err)
@@ -682,14 +752,71 @@ var loadDetailsPost = function(req,res)
                 {
                     if(err)
                         throw err;
-                    currId = rows[0].id;
-                    
-                    var data =  {deviceName : rows[0].deviceName , operatingSystem : rows[0].operatingSystem, visualDescription : rows[0].visualDescription,
-                    resolution : rows[0].resolution, aspectRatio : rows[0].aspectRatio, additionalDetails : rows[0].additionalDetails};
-                    res.send(JSON.stringify(data));
+                    if(rows.length  == 0)
+                    {
+                        res.send(JSON.stringify("Does not exist"));
+                        console.log(" I should be in here ");
+                    }
+                    else
+                    {
+                        currId = rows[0].id;
+                        var data =  {deviceId : rows[0].id, deviceName : rows[0].deviceName , operatingSystem : rows[0].operatingSystem, visualDescription : rows[0].visualDescription,
+                        resolution : rows[0].resolution, aspectRatio : rows[0].aspectRatio, additionalDetails : rows[0].additionalDetails};
+                        res.send(JSON.stringify(data));
+                    }
                 });
     }
 };
+var adminRejectVar = function(req, res)
+{
+    console.log(" In admin reject ");
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else
+    {
+        res.render('adminRejectPage', {user : currUser.username, admin : admin}); 
+    }
+};
+var addAdminVar = function(req, res)
+{
+    console.log(" In add admin var ");
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
+    }
+    else
+    {
+        res.render('addAdminPage', {user: currUser.username, admin : admin}); 
+    }
+};
+var addAdminPost = function(req,res)
+{
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
+    }
+    else
+    {
+        console.log(" about the execute the add admin post query ");
+       connection.query("UPDATE employees SET admin='Y' WHERE username=?",[req.body.username],
+                function(err, rows)
+                {
+                    if(err)
+                        throw err;
+                    res.send(JSON.stringify(req.body.username));
+                });
+    }
+}
 function parseDeviceCategory(deviceCategory)
 {
     if(deviceCategory == 'IPads')
@@ -708,6 +835,7 @@ function parseDeviceCategory(deviceCategory)
         return 'androidTablets';
 
 }
+
 // 404 not found
 var notFound404 = function(req, res, next) {
     res.status(404);
@@ -725,7 +853,6 @@ module.exports.getDeviceNamePost = getDeviceNamePost;
 
 module.exports.deviceCategoryPost = deviceCategoryPost;
 
-// Log in
 module.exports.login = login;
 
 module.exports.loginPost = loginPost;
@@ -736,7 +863,6 @@ module.exports.registerPost = registerPost;
 
 module.exports.logOut = logOut;
 
-// 404 not found
 module.exports.notFound404 = notFound404;
 
 module.exports.iPadsVar = iPadsVar;
@@ -784,3 +910,15 @@ module.exports.modifyDeviceVar = modifyDeviceVar;
 module.exports.modifyDevicePost = modifyDevicePost;
 
 module.exports.loadDetailsPost = loadDetailsPost;
+
+module.exports.adminRejectVar = adminRejectVar;
+
+module.exports.addAdminVar = addAdminVar;
+
+module.exports.addAdminPost = addAdminPost;
+
+module.exports.searchNameVar = searchNameVar;
+
+module.exports.getUserNamePost = getUserNamePost;
+
+

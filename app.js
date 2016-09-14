@@ -13,7 +13,14 @@ var LocalStrategy = require('passport-local').Strategy;
 var route = require('./route');
 var Model = require('./model');
 
+
+
 var app = express();
+
+
+
+/** This passport library is what was used to deal with user 
+ * verification **/
 passport.use(new LocalStrategy(function(username, password, done) {
    new Model.User({username: username}).fetch().then(function(data) {
    	console.log("in here please");
@@ -22,19 +29,18 @@ passport.use(new LocalStrategy(function(username, password, done) {
       	  console.log(" No such user ");
          return done(null, false, {message: 'Invalid username or password'});
       } else {
-      	//console.log(" There is such a user");
          user = data.toJSON();
-         //console.log(" The user is " + user);
          if(!bcrypt.compareSync(password, user.password)) {
-         	//console.log(" my password " + password + " their password " + user.password);
             return done(null, false, {message: 'Invalid username or password'});
          } else {
-         	//console.log(" The password also matches ");
             return done(null, user);
          }
       }
    });
 }));
+
+
+
 /** For password identification **/
 passport.serializeUser(function(user, done) {
   done(null, user.username);
@@ -46,9 +52,12 @@ passport.deserializeUser(function(username, done) {
    });
 });
 
+
 app.set('port', process.env.PORT || 80);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
 
 /** The application middle-wares **/
 app.use(cookieParser());
@@ -63,8 +72,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname));
 
-/** The employee routes **/
-// GET
+
+
+/** All the various routes **/
 app.get('/', route.deviceCategory);
 
 app.post('/', route.deviceCategoryPost);
@@ -73,23 +83,16 @@ app.post('/nameQuery', route.getDeviceNamePost);
 
 app.post('/userNameQuery', route.getUserNamePost);
 
-// signin
-// GET
 app.get('/Login', route.login);
-// POST
+
 app.post('/Login', route.loginPost);
 
-// signup
-// GET
 app.get('/Register', route.register);
-// POST
+
 app.post('/Register', route.registerPost);
 
-// logout
-// GET
 app.get('/logout', route.logOut);
 
-/** The device page routes **/
 app.get('/iPadsPage', route.iPadsVar);
 
 app.get('/iPadsPageMore', route.iPadsMoreVar);
@@ -143,9 +146,6 @@ app.get('/addAdmin', route.addAdminVar);
 app.post('/addAdmin', route.addAdminPost);
 
 app.get('/searchName',route.searchNameVar);
-
-
-
 
 /********************************/
 

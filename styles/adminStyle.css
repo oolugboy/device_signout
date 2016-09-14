@@ -133,19 +133,6 @@ html
         margin-right: 0;
     }
 }
-/** TODO delete this after figuring out the transition **/
-div.inner-cover
-{
-	width: 1100px;
-	height: 200px;
-	position : fixed;       
-	top : 0;
-	bottom : 0;
-	left : 0;
-	right : 0;   
-	margin: auto;   
-        border: 2px solid red;
-}
 
 p.welcomeMessage
 {

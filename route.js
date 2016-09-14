@@ -1,20 +1,16 @@
-// vendor library
+// vendor libraries
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
-
-// For the devices part 
-/* This is just to test how to link node.js */
 var express = require('express');
 var mysql = require('mysql');
 var express = require('express');
 var path = require('path');
 var app = express();
 
+
+
+// custom libraries
 var database = require("./database");
-
-
-// custom library
-// model
 var Model = require('./model');
 var connection = database.connection;
 
@@ -25,6 +21,11 @@ connection.query('USE devicesignout');
 var currUser;
 /** This variable is to store whether the user is an admin or not **/
 var admin;
+
+var deviceName;// Name of the device that is being operated on
+
+var currId; // The ID of the device whose details are about to be modified 
+
 
 // Device Category home page 
 var deviceCategory = function(req, res, next) {
@@ -54,84 +55,6 @@ var deviceCategory = function(req, res, next) {
             });
     }
 };
-
-var deviceName;// Name of the device that is being operated on 
-var getDeviceNamePost = function(req, res)
-{      
-    console.log(" WE FINALLY DID IT!");
-
-    console.log(" In here ");
-    var deviceId = JSON.stringify((req.body.deviceId));
-    var op = req.body.op;
-    console.log(" The device Id is " + deviceId);
-    if(typeof(deviceId) !== 'undefined')
-    {
-        console.log(" Before the query the op " + op); 
-        if(op == 'remove') /** The name of the device that is to be removed **/
-        {
-            connection.query('SELECT * FROM devicetable WHERE deviceName='+ deviceId, function(err, row){
-                if(err)
-                    throw err;
-            console.log(" The remove amount " + row.length);
-            if(row.length == 0)
-            {  
-                checkOutMessage = 'Does Not Exist';  
-                res.send(JSON.stringify(checkOutMessage));      
-            }
-            else
-            {     
-                deviceName = row[0].deviceName; 
-                res.send(JSON.stringify(deviceName));
-            }           
-            });
-        }
-        else if (op == "modify")// Do nothing in the case of modify
-        {
-            console.log(" In the correct if ");
-            res.send(JSON.stringify("modify"));           
-        }
-        else /** In the case of checkout or return **/
-        {
-            connection.query('SELECT * FROM devicetable WHERE id='+ deviceId, function(err, row){
-                if(err)
-                throw err;
-            console.log(" The amount " + row.length);
-            if(row.length == 0)
-            {  
-                checkOutMessage = 'Does Not Exist';  
-                res.send(JSON.stringify(checkOutMessage));      
-            }
-            else
-            {     
-                deviceName = row[0].deviceName; 
-                res.send(JSON.stringify(deviceName));
-            }           
-            });
-        }
-    }
-}
-var getUserNamePost = function(req, res)
-{
-    connection.query("SELECT * from employees where username=?",[req.body.username], 
-            function(err, rows){
-                if(err)
-                    throw err;
-                var data = {firstName : "", lastName : ""};
-                console.log(" The server username " + req.body.username);
-                if(rows.length == 0)
-                {
-                    data.firstName = "Does not exist ";
-                    res.send(JSON.stringify(data));
-                }
-                else
-                {
-                    data.firstName = rows[0].firstname;
-                    data.lastName = rows[0].lastname;
-                    res.send(JSON.stringify(data));
-                }
-            });
-};
-/** handles the updates of the database **/
 var deviceCategoryPost = function(req, res, next){
     console.log(" The form has been submitted " + req.body.checkOut);
     if(!req.isAuthenticated() && req.body.checkOut == "true"){
@@ -174,8 +97,92 @@ var deviceCategoryPost = function(req, res, next){
     }
 };
 
+
+/* This function is used to get the full device name for the 
+ * dialogues **/
+var getDeviceNamePost = function(req, res)
+{      
+    console.log(" WE FINALLY DID IT!");
+
+    console.log(" In here ");
+    var deviceId = JSON.stringify((req.body.deviceId));
+    var op = req.body.op;
+    console.log(" The device Id is " + deviceId);
+    if(typeof(deviceId) !== 'undefined')
+    {
+        console.log(" Before the query the op " + op); 
+        if(op == 'remove') /** The name of the device that is to be removed **/
+        {
+            //Note: In the case, the deviceId variable would be holding the user inputed device name
+            connection.query('SELECT * FROM devicetable WHERE deviceName='+ deviceId, function(err, row){
+                if(err)
+                    throw err;
+            console.log(" The remove amount " + row.length);
+            if(row.length == 0)
+            {  
+                checkOutMessage = 'Does Not Exist';  
+                res.send(JSON.stringify(checkOutMessage));      
+            }
+            else
+            {     
+                deviceName = row[0].deviceName; 
+                res.send(JSON.stringify(deviceName));
+            }           
+            });
+        }
+        else if (op == "modify")// Basically do nothing in the case of modify
+        {
+            console.log(" In the correct if ");
+            res.send(JSON.stringify("modify"));           
+        }
+        else /** In the case of checkout or return **/
+        {
+            connection.query('SELECT * FROM devicetable WHERE id='+ deviceId, function(err, row){
+                if(err)
+                throw err;
+            console.log(" The amount " + row.length);
+            if(row.length == 0)
+            {  
+                checkOutMessage = 'Does Not Exist';  
+                res.send(JSON.stringify(checkOutMessage));      
+            }
+            else
+            {     
+                deviceName = row[0].deviceName; 
+                res.send(JSON.stringify(deviceName));
+            }           
+            });
+        }
+    }
+}
+
+
+/* This gets the full name for the user that the dialogues 
+ * are going to use to interact with the administrator **/
+var getUserNamePost = function(req, res)
+{
+    connection.query("SELECT * from employees where username=?",[req.body.username], 
+            function(err, rows){
+                if(err)
+                    throw err;
+                var data = {firstName : "", lastName : ""};
+                console.log(" The server username " + req.body.username);
+                if(rows.length == 0)
+                {
+                    data.firstName = "Does not exist ";
+                    res.send(JSON.stringify(data));
+                }
+                else
+                {
+                    data.firstName = rows[0].firstname;
+                    data.lastName = rows[0].lastname;
+                    res.send(JSON.stringify(data));
+                }
+            });
+};
+
+
 // Login Page
-// GET
 var login = function(req, res, next) {
     if(req.isAuthenticated()) 
     {
@@ -187,9 +194,6 @@ var login = function(req, res, next) {
         res.render('loginPage', {title: 'Login'});
     }
 };
-
-// Login Page
-// POST
 var loginPost = function(req, res, next) {   
     var ret = req.body;  
     /** If just trying to return a device **/
@@ -241,8 +245,7 @@ var loginPost = function(req, res, next) {
     }
 };
 
-// sign up
-// GET
+
 var register = function(req, res, next) {
     if(req.isAuthenticated()) {
         res.redirect('/');
@@ -250,8 +253,6 @@ var register = function(req, res, next) {
         res.render('registerPage', {title: 'Register'});
     }
 };
-// sign up
-// POST
 var registerPost = function(req, res, next) {
     var user = req.body;
     console.log(" The req body " + req.body);
@@ -291,6 +292,8 @@ var registerPost = function(req, res, next) {
         }
     });
 };
+
+
 // Logout
 var logOut = function(req, res, next) {
     console.log(" The logout button was pressed ");
@@ -302,8 +305,6 @@ var logOut = function(req, res, next) {
     }
 };
 
-
-/** Seperate connection for the devices **/ 
 
 /** For the Ipads **/
 var iPadsVar = function(req,res){    
@@ -321,7 +322,8 @@ var iPadsVar = function(req,res){
         });  
     }    
 };
-
+/* The "More" keyword means that this is what renders the page when the user selects 
+ * more details **/
 var iPadsMoreVar = function(req,res){    
     if(!req.isAuthenticated())
     {
@@ -336,6 +338,8 @@ var iPadsMoreVar = function(req,res){
         });  
     }    
 };
+
+
 /** For the ipods or iphones **/
 var iPodsOrIPhonesVar = function(req,res){    
     if(!req.isAuthenticated())
@@ -367,6 +371,8 @@ var iPodsOrIPhonesMoreVar = function(req,res){
         });  
     }    
 };
+
+
 /** For the android phones **/
 var androidPhonesVar = function(req,res){    
     if(!req.isAuthenticated())
@@ -397,6 +403,8 @@ var androidPhonesMoreVar = function(req,res){
         });  
     }    
 };
+
+
 /** For the android tablets **/
 var androidTabletsVar = function(req,res){    
     if(!req.isAuthenticated())
@@ -427,6 +435,8 @@ var androidTabletsMoreVar = function(req,res){
         });  
     }    
 };
+
+
 /** For mozilla/amazon phones **/
 var mozillaOrAmazonVar = function(req,res){    
     if(!req.isAuthenticated())
@@ -457,6 +467,8 @@ var mozillaOrAmazonMoreVar = function(req,res){
         });  
     }    
 };
+
+
 /** For the amazon tablets **/
 var amazonTabletsVar = function(req,res){    
     if(!req.isAuthenticated())
@@ -487,6 +499,8 @@ var amazonTabletsMoreVar = function(req,res){
         });  
     }    
 };
+
+
 /** For the windows devices**/
 var windowsVar = function(req,res){    
     if(!req.isAuthenticated())
@@ -518,6 +532,8 @@ var windowsMoreVar = function(req,res){
     }    
 };
 
+
+/** This renders the administrator home page **/
 var adminVar = function(req, res){
     if(!req.isAuthenticated())
     {
@@ -532,6 +548,9 @@ var adminVar = function(req, res){
         res.render('adminPage', {user: currUser}); 
     }
 };
+
+
+/** This renders the page that lets the administrator add a device to the database **/
 var addDeviceVar = function(req, res){
     if(!req.isAuthenticated())
     {
@@ -564,8 +583,8 @@ var addDevicePost = function(req, res){
         var resolution = newDev.resolution;
         var aspectRatio = newDev.aspectRatio;
         var additionalDetails = newDev.additionalDetails;
-
-        /** TODO ask if we are supposed to check if someone is entering a duplicate id **/ 
+        
+        /** TODO make sure that the user has not inserted something to the database **/
         if(typeof id !== 'undefined')
         {
             connection.query('INSERT INTO devicetable VALUES (?,?,?,?,?,?,?,?,?,?,NULL)',[id, deviceName,
@@ -578,20 +597,10 @@ var addDevicePost = function(req, res){
         }
     }
 };
-var removeDeviceVar = function(req, res){
-    if(!req.isAuthenticated())
-    {
-        res.redirect('/Login');
-    }
-    else if(admin == 'false')
-    {
-        res.redirect('/adminReject');
-    }
-    else
-    {
-        res.render('removeDevicePage',{user: currUser});
-    }
-};
+
+
+/* This function handles the device names that would be suggested to the user
+ * as the user manually enter the name of the device **/
 var searchVar = function(req, res){
     console.log(" In the search var ");
     console.log(" The key " + req.query.key);
@@ -608,6 +617,11 @@ var searchVar = function(req, res){
                 res.send(JSON.stringify(data));
             });
 };
+
+
+/* This function returns the username that the type ahead function
+ * would use as suggestions as the user is entering the user name 
+ * for administrative purposes **/
 var searchNameVar = function(req, res){
     console.log(' In the search name var ');
     connection.query('SELECT userName from employees WHERE userName LIKE "%' + req.query.key + '%"',
@@ -624,6 +638,21 @@ var searchNameVar = function(req, res){
             });
 };
 
+
+var removeDeviceVar = function(req, res){
+    if(!req.isAuthenticated())
+    {
+        res.redirect('/Login');
+    }
+    else if(admin == 'false')
+    {
+        res.redirect('/adminReject');
+    }
+    else
+    {
+        res.render('removeDevicePage',{user: currUser});
+    }
+};
 var removeDevicePost = function(req, res){
     var deviceName;
     if(!req.isAuthenticated())
@@ -651,6 +680,10 @@ var removeDevicePost = function(req, res){
                 }); 
     }
 };
+
+
+/* The user would be interacting with these two functions when they
+ * want to modiy the details of a device **/
 var modifyDeviceVar = function(req, res)
 {
     if(!req.isAuthenticated())
@@ -668,7 +701,6 @@ var modifyDeviceVar = function(req, res)
             aspectRatio: "n/a", additionalDetails: "n/a"});
     }
 };
-var currId; // The ID of the device whose details are about to be modified 
 var modifyDevicePost = function(req, res)
 {
     if(!req.isAuthenticated())
@@ -684,6 +716,9 @@ var modifyDevicePost = function(req, res)
                 {
                     if(err)
                         throw err;
+                    /* The main idea here is to replace every field in the row pertaining to the current device 
+                     * that was entered by the user, and then any field that the user left blank would retain its 
+                     * original value **/
                     if(typeof req.body.deviceId === 'undefined' || req.body.deviceId == "")
                         deviceId = rows[0].id;
                     else
@@ -691,7 +726,7 @@ var modifyDevicePost = function(req, res)
                     if(typeof req.body.deviceName === "undefined" || req.body.deviceName == "")
                     {
                         console.log(" should be in here ")
-                        deviceName = rows[0].deviceName;//Use the prior value
+                        deviceName = rows[0].deviceName;//Use original value
                     }
                     else
                     {
@@ -738,6 +773,10 @@ var modifyDevicePost = function(req, res)
                 });
     }
 };
+
+
+/* This is to load all the old device details of the device that the user 
+ * wants to modify its fields. **/
 var loadDetailsPost = function(req,res)
 {
     console.log(" In load details ");
@@ -767,6 +806,10 @@ var loadDetailsPost = function(req,res)
                 });
     }
 };
+
+
+/* This is the page that would be rendered if a user with no adminstrator
+ * priviledges is trying to access any of the pages reserved for an administrator **/
 var adminRejectVar = function(req, res)
 {
     console.log(" In admin reject ");
@@ -779,6 +822,10 @@ var adminRejectVar = function(req, res)
         res.render('adminRejectPage', {user : currUser.username, admin : admin}); 
     }
 };
+
+
+/* The user would be interacting with the next two function when they
+ * are trying to add another user as an admin **/
 var addAdminVar = function(req, res)
 {
     console.log(" In add admin var ");
@@ -817,6 +864,11 @@ var addAdminPost = function(req,res)
                 });
     }
 }
+
+
+/** This function is needed because the format of the 
+ * device categories, as presented in any of the forms, is not the same as it apears in the database.
+ * This is simply to parse the intended device category that would be used to interact with the database **/
 function parseDeviceCategory(deviceCategory)
 {
     if(deviceCategory == 'IPads')
@@ -836,12 +888,12 @@ function parseDeviceCategory(deviceCategory)
 
 }
 
+
 // 404 not found
 var notFound404 = function(req, res, next) {
     res.status(404);
     res.render('404', {title: '404 Not Found'});
 }; 
-
 
 
 // export functions

@@ -17,7 +17,6 @@ html
    /*  border: 2px solid blue; */
     height: 0%;
 }
-
 /* Toggle Styles */
 
 #wrapper {
@@ -141,7 +140,6 @@ html
         margin-right: 0;
     }
 }
-/** TODO delete this after figuring out the transition **/
 input.form-control
 {
     /** height:35px; **/
@@ -150,26 +148,6 @@ input.form-control
     top: -30px;
     position:relative;
   /*  border: 2px solid cyan; */
-}
-select.form-control
-{
-    width:300px;
-    position:relative;
-    top: -30px;
-    left:30%; 
-}
-label.form-label
-{
-  /*  border: 2px solid orange; */
-}
-div.deviceIdInstruction
-{
-    position: relative;
-    top: 10%;
-    left: 9.5%;
-    width: 40%;
-    height: 10%;
-   /**  border: 2px solid indigo; **/
 }
 h3.optionsHeader
 {
@@ -193,15 +171,6 @@ div.container
     height: 20%;
     right: 6.1%;
 }
-div.container2
-{
-    position: relative;
-    width: 80%;
-    height: 100%;
-   /** border: 2px solid green; **/ 
-    top:15%;
-    left:10%;
-}
 div.form-group
 {
     width: 50%;
@@ -210,8 +179,8 @@ div.form-group
 button.submitButton
 {
     position: absolute;
-    left: 50%;
-    top : 37%;
+    left: 30%;
+    top : 39%;
     background-color: black; /* Green */
     border: none;
     /*  background: none; */
@@ -222,68 +191,11 @@ button.submitButton
     display: inline-block;
     font-size: 16px;
     border-radius: 12px;
-    width : 30%;
 }
-div.headInstr
+#username
 {
-    height: 60px;
-    /** border: 2px solid black; **/
+    position: absolute;
+    top : 10px;
+    left : 30px;
 }
 
-/** For the auto complete **/
-.tt-query
-{
-    width:60%;
-}
-
-.tt-hint {
-    width: 800px;
-    height: 100px;
-    padding: 8px 12px;
-    font-size: 24px;
-    line-height: 30px;
-    border: 2px solid #ccc;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    outline: none;
-    visibility: hidden;
-}
-
-.tt-query {
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-} 
-
-.tt-hint {
-    color: #999
-}
-
-.tt-dropdown-menu {
-    width: 330px;
-    margin-top: 12px;
-    padding: 8px 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
-
-.tt-suggestion {
-    padding: 3px 20px;
-    font-size: 18px;
-    line-height: 24px;
-}
-
-.tt-suggestion.tt-is-under-cursor {
-    color: #fff;
-    background-color: black; 
-
-
-}

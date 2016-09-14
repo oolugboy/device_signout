@@ -20,7 +20,6 @@ function getDeviceName(inputId, formId, op) {
                 op : op
             },
             success: function(data, textStatus, jqXHR) {
-                console.log(" We successfully gotten the name ");
                 if (typeof data !== 'undefined') {
                     var deviceName = JSON.parse(data);
                         
@@ -77,11 +76,9 @@ function getUserName(inputId, formId, op) {
                 op : op
             },
             success: function(data, textStatus, jqXHR) {
-                console.log(" We successfully gotten the user name ");
                 if (typeof data !== 'undefined') {
                     var firstName = (JSON.parse(data)).firstName;
                     var lastName = (JSON.parse(data)).lastName;
-                    console.log(" The first name is  " + firstName);
                     var wholeName = "";
                     wholeName += (firstName + " " + lastName); 
                     if (firstName == 'Does Not Exist')
@@ -90,10 +87,8 @@ function getUserName(inputId, formId, op) {
                     }
                     else
                     {
-                        console.log(" The op is " + op);
                         if(op == 'addAdmin')
                         {
-                            console.log(" addadmin getUsername if block ");
                             confirm.render2(null, "addAdmin", wholeName, inputId, formId);
                         }
                     }                            
@@ -305,6 +300,8 @@ function customSubmit(inputId, checkOut) {
 }
 
 function CustomConfirm() {
+    /* This render methods pertains to the dialogues that
+     * have have to do with the device **/
     this.render = function(dialog, op, deviceName, inputId, formId) {
 
         var winW = window.innerWidth;
@@ -316,10 +313,10 @@ function CustomConfirm() {
         dialogbox.style.left = (winW / 2) - (550 * .5) + "px";
         dialogbox.style.top = "100px";
         dialogbox.style.display = "block";
-
+            
+        
         if (op == 'checkOutDevice') {
             document.getElementById('dialogboxhead').innerHTML = "Are you sure you want to check out the " + deviceName + " ?";
-            //   document.getElementById('dialogboxbody').innerHTML = dialog;
             document.getElementById('dialogboxfoot').innerHTML = 
                 '<button class="dialOption" onclick="confirm.yes(\'' + op + '\',\'' + inputId + '\',\'' + null + '\')">Yes</button> <button class="dialOption" onclick="confirm.no()">No</button>';
         } else if (op == 'checkOutAlert') {
@@ -367,8 +364,9 @@ function CustomConfirm() {
             document.getElementById('dialogboxfoot').innerHTML ='<button class ="dialOption" onclick="confirm.okay()">Okay</button>';
         }
     }
+    /* This render method pertains to the dialogues that 
+     * have to do with users **/
     this.render2 = function(dialog, op, wholeName , inputId, formId) {
-        // alert(" We are to render " + deviceName);
 
         var winW = window.innerWidth;
         var winH = window.innerHeight;
@@ -405,6 +403,8 @@ function CustomConfirm() {
         document.getElementById('dialogbox').style.display = "none";
         document.getElementById('dialogoverlay').style.display = "none";
     }
+    /** These call the submit functions if the user says yes
+     * to the dialogues **/
     this.yes = function(op, inputId, formId) {
         if (op == "checkOutDevice") {
             customSubmit(inputId, "checkOut");
